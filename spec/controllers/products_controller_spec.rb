@@ -33,7 +33,7 @@ RSpec.describe ProductsController, type: :controller do
       let!(:products_count) { Product.count }
 
       before do
-        wholesale_price = Random.new.rand(1.0..100.0).round(2)
+        wholesale_price = Random.new.rand(1.0..100.0).round(2).to_d
         product_hash = {
             name: FFaker::Lorem.words(5).join(" "),
             description: FFaker::Lorem.sentence,
@@ -69,7 +69,7 @@ RSpec.describe ProductsController, type: :controller do
         }
       end
 
-      it "displays a flash error message" do
+      it "adds a flash error message" do
         expect(flash[:error]).to be_present
       end
 
@@ -119,7 +119,7 @@ RSpec.describe ProductsController, type: :controller do
       let(:new_description) { FFaker::Lorem.sentence }
       let(:new_category) { FFaker::Lorem.words(3).join }
       let(:new_sku) { FFaker::Lorem.words(2).join }
-      let(:new_wholesale) { Random.new.rand(1.0..100.0).round(2) }
+      let(:new_wholesale) { Random.new.rand(1.0..100.0).round(2).to_d }
       let(:new_retail) { new_wholesale * 4 }
 
       before do
@@ -164,7 +164,7 @@ RSpec.describe ProductsController, type: :controller do
         }
       end
 
-      it "displays an error message" do
+      it "adds an error message to flash" do
         expect(flash[:error]).to be_present
       end
 
