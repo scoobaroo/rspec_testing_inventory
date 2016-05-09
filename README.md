@@ -1,6 +1,6 @@
 # <img src="https://cloud.githubusercontent.com/assets/7833470/10899314/63829980-8188-11e5-8cdd-4ded5bcb6e36.png" height="60"> Testing Inventory
 
-**Objective:** Use TDD in Rails to create an inventory management application. Your goal is to write code to pass the tests.
+**Objective:** Use TDD in Rails to create an inventory management application. Your goal is to write code to pass some existing tests, then write and pass tests for other features.
 
 ## Getting Started
 
@@ -8,7 +8,7 @@
 2. Run `bundle install` to install gems.
 3. Run `rake db:create db:migrate` to create and migrate the database.
 4. Start your Rails server.
-5. Run `rspec` in the Terminal. You should see an angry error message. Your job is to fix it!
+5. Run `rspec` in the Terminal. You should see an angry error message. Your first job is to fix it!
 
 ## Part 1: Products
 
@@ -16,30 +16,30 @@ A product represents a kind of item sold. Each of this app's products will store
 
 #### Goal:  Pass products controller tests.
 
-* The failing specs are for a `ProductsController`. For the first part of this lab, implement the functionality for the `ProductsController` to pass the tests. **Some tips:**
+* The failing specs are for a `ProductsController`. Implement the functionality for the `ProductsController` to pass the tests. **Some tips:**
   * Read the errors carefully. They will guide you as to what to do next.
   * Once you've gotten past the initial setup errors, and you have failing specs printing out in the Terminal, it may help to only run specific specs by name using `rspec spec -e '#index'`
 * You DON'T need to implement fully-functioning views.
-* To pass some of these tests, you'll have to add validations to your model to check that fields are present.  
+* To pass some of these tests, you'll have to add model validations to check that fields are present.  
+* Remember to use [strong parameters](http://guides.rubyonrails.org/action_controller_overview.html#strong-parameters) in your controller.
 
 #### Goal: Write tests for the product model.
 
 * Once you have all the specs passing for the `ProductsController`, it's time to implement unit tests for a product model.
 
-* Generate an rspec model test for the product model by running `rails g rspec:model product`.  Read the log messages carefully and find the file(s) Rails expects you to use for testing.  One of these files is `spec/factories/products.rb`. You'll use the factory in this file with the gems Factory Girl and FFaker to create data for testing.
+* Generate an rspec model test for the product model by running `rails g rspec:model product`.  Read the log messages carefully and find the file(s) Rails expects you to use for testing.  One of these files is `spec/factories/products.rb`. Do not overwrite this file! You'll use the factory in this file, with the gems Factory Girl and FFaker, to create data for testing.
 
+* The other new file generated for your model tests is in `spec/models`.  In this file, write tests for a product model instance method called `margin`.  The `#margin` method should calculate and return the [retail margin](http://retail.about.com/od/glossary/g/margin.htm) of the product instance. The retail margin is the retail price minus the wholesale price, divided by the retail price and expressed as a percentage.
 
-* The other new file generated for your model tests is in `spec/models`.  In this file, write tests for a product model instance method called `margin`.  The `#margin` method should calculate and return the [retail margin](http://retail.about.com/od/glossary/g/margin.htm) of the product instance.
-
-  * <details><summary>What product to test with?</summary>You can use Factory Girl to create a sample product in the test code. (See the controller code for an example.) Also calculate the product's profit margin (by hand) so you know what you expect the `margin` method to return.</details>
+  * <details><summary>What product to test with?</summary>You can use Factory Girl to `create` a sample product in the test code. (See the controller code for an example.) Also calculate the product's profit margin (by hand) so you know what you expect the `margin` method to return.</details>
 
 * Write a test to ensure that the `#margin` method returns a `BigDecimal` value.
 
-* Write a test to endure that the `#margin` method returns a correct value.
+* Write a test to endure that the `#margin` method returns a correct value for some example product.
 
 * Run `rspec spec/models`, and read the output carefully. Fix any errors that are preventing your tests from running.  
 
-* Once you have your model tests running, write code to pass them! Remember to use strong parameters.
+* Once you have your model tests running, write code to pass them! 
 
 Feel free to reference the [solution branch](../../tree/solution) for guidance.
 
@@ -47,7 +47,7 @@ Feel free to reference the [solution branch](../../tree/solution) for guidance.
 
 Now, you'll practice TDD more independently.  
 
-A product represents a type of product the site sells.  (You can think of products as tshirts, for example, where users can pick color and size.)  The site allows customization of the the color and size of products, and it would be good to know the status of each particular item in the warehouse (sold/unsold).  For this reason, products should **have many items**. Use TDD to guide your implementation of CRUD for items. That means **write tests first**.
+A product represents a type of product the site sells.  (You can think of products as tshirts, for example.)  The site allows customization of the the color and size of products, and it would be good to know the status of each particular item in the warehouse (sold/unsold).  For this reason, products should **have many items**. Use TDD to guide your implementation of CRUD for items. That means **write tests first**.
 
 Items should have a minimum of three attributes: `size`, `color`, and `status`. The status will usually be `"sold"` or `"unsold"`.
 
@@ -91,7 +91,7 @@ Note: Items routes should be nested under products routes. See the [Rails docs f
 
 * Use Factory Girl's associations to add a product to your item factory.
 
-*  Write tests to make sure the model validates the `presence` of three attributes: `size`, `color`, and `status`.
+* Write tests to make sure the model validates the `presence` of three attributes: `size`, `color`, and `status`.
 
 * Debug any errors that prevent `rspec` from running your tests. Read log and error messages carefully.
 
