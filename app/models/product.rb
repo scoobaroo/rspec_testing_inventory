@@ -5,4 +5,10 @@ class Product < ActiveRecord::Base
   def margin
     100*(retail - wholesale)/(retail)
   end
+
+  def sell_through
+    sold = (items.select { |item| item.status == 'sold' }).count
+    (sold.to_d)/(items.count.to_d)
+  end
+
 end
