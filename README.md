@@ -1,83 +1,97 @@
 # <img src="https://cloud.githubusercontent.com/assets/7833470/10899314/63829980-8188-11e5-8cdd-4ded5bcb6e36.png" height="60"> Testing Inventory
 
-**Objective:** Use TDD in Rails to create an inventory management application. Your goal is to write code to pass the tests.
+**Objective:** Use TDD in Rails to create an inventory management application. Your goal is to write code to pass some existing tests, then write and pass tests for other features.
 
 ## Getting Started
 
-1. Fork this repo, and clone it into your `develop` folder on your local machine.
+1. Fork this repo, and clone it into your WDI class folder on your local machine.
 2. Run `bundle install` to install gems.
 3. Run `rake db:create db:migrate` to create and migrate the database.
 4. Start your Rails server.
-5. Run `rspec` in the Terminal. You should see an angry error message. Your job is to fix it!
+5. Run `rspec` in the Terminal. You should see an angry error message. Your first job is to fix it!
 
 ## Part 1: Products
 
+A product represents a kind of item sold. Each of this app's products will store a `name`, a `description`, a `category`, a `sku` number (which may contain numbers and letters), and `wholesale` and `retail` prices.  Both prices will be `decimal`s, because Ruby's `BigDecimal` is more precise than a `float`!
+
 #### Goal:  Pass products controller tests.
 
-* The failing specs are for a `ProductsController`. For the first part of this lab, implement the functionality for the `ProductsController` to pass the tests. **Some tips:**
+* The failing specs are for a `ProductsController`. Implement the functionality for the `ProductsController` to pass the tests. **Some tips:**
   * Read the errors carefully. They will guide you as to what to do next.
   * Once you've gotten past the initial setup errors, and you have failing specs printing out in the Terminal, it may help to only run specific specs by name using `rspec spec -e '#index'`
 * You DON'T need to implement fully-functioning views.
+* To pass some of these tests, you'll have to add model validations to check that fields are present.  
+* Remember to use [strong parameters](http://guides.rubyonrails.org/action_controller_overview.html#strong-parameters) in your controller.
 
 #### Goal: Write tests for the product model.
 
-* Once you have all the specs passing for the `ProductsController`, it's time to implement unit tests for a product model. Note that your app doesn't currently have a product model. This is the perfect time to write tests for it!
+* Once you have all the specs passing for the `ProductsController`, it's time to implement unit tests for a product model.
 
-* Generate an rspec model test for the product model by running `rails g rspec:model product`.  Read the log messages to find the files that Rails created for you.  
+* Generate an rspec model test for the product model by running `rails g rspec:model product`.  Read the log messages carefully and find the file(s) Rails expects you to use for testing.  One of these files is `spec/factories/products.rb`. Do not overwrite this file! You'll use the factory in this file, with the gems Factory Girl and FFaker, to create data for testing.
 
-* One of the new files should be a "factory" file that FactoryGirl will use to create fake products. Inside, you'll find this code:
+* The other new file generated for your model tests is in `spec/models`.  In this file, write tests for a product model instance method called `margin`.  The `#margin` method should calculate and return the [retail margin](http://retail.about.com/od/glossary/g/margin.htm) of the product instance. The retail margin is the retail price minus the wholesale price, divided by the retail price and expressed as a percentage.
 
-    ```
-    factory :product do
-      name "MyString"
-      sku "MyString"
-      wholesale "9.99"
-      retail "9.99"
-      category "MyString"
-      description "MyString"
-    end
-    ```
+  * <details><summary>What product to test with?</summary>You can use Factory Girl to `create` a sample product in the test code. (See the controller code for an example.) Also calculate the product's profit margin (by hand) so you know what you expect the `margin` method to return.</details>
 
-    Replace the static strings with FFaker-generated data.
-      * Hint: Remember that the retail and wholesale prices should be decimals.   
-      * Hint: Use Factory Girl's "lazy attributes" to get different attribute values for each product.
+* Write a test to ensure that the `#margin` method returns a `BigDecimal` value.
 
-* The other new file generated for your model tests is in `spec/models`.  In this file, write tests for a Product model instance method called `margin`.  The `#margin` method should calculate and return the [retail margin](http://retail.about.com/od/glossary/g/margin.htm) of the product instance.
+* Write a test to endure that the `#margin` method returns a correct value for some example product.
 
-  * <details><summary>What product to test with?</summary>You can use Factory Girl to create a sample product in the test code. Also calculate the product's profit margin (by hand) so you know what you expect the `margin` method to return.</details>
-  * Beware of data types. The app is using `BigDecimal` for prices because it stores precise values.
-
-* Run `rspec spec/models`, and read the output carefully. Fix any errors that are preventing your tests from running. **Don't worry about passing the tests yet.**
+* Run `rspec spec/models`, and read the output carefully. Fix any errors that are preventing your tests from running.  
 
 * Once you have your model tests running, write code to pass them!
 
-<!-- Feel free to reference the [solution branch](../../tree/solution) for guidance. -->
+Feel free to reference the [solution branch](../../tree/solution) for guidance.
 
 ## Part 2: Items
 
 Now, you'll practice TDD more independently.  
 
-Your app will sell socks.  A product represents a design of socks the site sells.  But, the site allows customization of the color and size of socks, and it would be good to know the status of each pair of socks in our warehouse (sold/unsold).  For this reason, products should **have many items**. Each item will represent a specific pair of socks. Use TDD to guide your implementation of CRUD for items. That means **write tests first**.
+A product represents a type of product the site sells.  (You can think of products as tshirts, for example.)  The site allows customization of the the color and size of products, and it would be good to know the status of each particular item in the warehouse (sold/unsold).  For this reason, products should **have many items**. Use TDD to guide your implementation of CRUD for items. That means **write tests first**.
 
-Don't forget to use Rails to generate `rspec` tests for your model and controller when you're ready to start speccing them out.
+Items should have a minimum of three attributes: `size`, `color`, and `status`. The status will usually be `"sold"` or `"unsold"`.
 
-* Items routes should be nested under products routes. See the [Rails docs for nested resources](http://guides.rubyonrails.org/routing.html#nested-resources).
+Note: Items routes should be nested under products routes. See the [Rails docs for nested resources](http://guides.rubyonrails.org/routing.html#nested-resources).
+
+
 
 #### Goal: Use test-driven development to implement the items controller.
+
+
+* Use Rails to generate an `rspec` test file for the item controller. Run `rspec spec/controllers`, and debug any issues that prevent your item controller tests from running (you'll still see your product controller tests passing).
 
 * Follow the examples in `spec/controllers/products_controller_spec.rb` as a guide while you write tests for your `ItemsController`.
 
 * Your `ItemsController` doesn't need an `#index` method, since your app will display all of a product's items on the `products#show` page. However, it should have the other six methods for RESTful routes (`#new`, `#create`, `#show`, `#edit`, `#update`, and `#destroy`).
 
-* Debug any errors that prevent `rspec` from running your tests. Read log and error messages carefully.
+* As you go, continue to debug any errors that prevent `rspec` from running your tests. Read log and error messages carefully.
 
-* Run `rspec spec/items`, and implement your item controller code to pass the tests you wrote.
+* Implement item controller code to pass the tests you wrote.
 
 #### Goal: Use test-driven development to implement the item model.
 
-* Generate test and factory files for the item model.  Take advantage of the [`factory_girl_rails`](https://github.com/thoughtbot/factory_girl_rails) and [`ffaker`](https://github.com/ffaker/ffaker) gems to define an `item` factory to use in your model tests.
+* Generate test and factory files for the item model.  
 
-* Items should have a minimum of three attributes: `size`, `color`, and `status`. Write tests to make sure the model validates these three attributes for `presence`.
+* Take advantage of the [`factory_girl_rails`](https://github.com/thoughtbot/factory_girl_rails) and [`ffaker`](https://github.com/ffaker/ffaker) gems to define an `item` factory to use in your model tests.
+
+* One of the new files Rails generates when you create model tests should be a "factory" file that Factory Girl will use to create fake items. Inside, you'll find this code:
+
+  ```ruby
+  FactoryGirl.define do
+    factory :item do
+      size "MyString"
+      color "MyString"
+      status "MyString"
+    end
+  end
+  ```
+
+  Replace the static strings with FFaker-generated data.
+    * Hint: Use Factory Girl's "lazy attributes" to get different attribute values for each product.  
+
+* Use Factory Girl's associations to add a product to your item factory.
+
+* Write tests to make sure the model validates the `presence` of three attributes: `size`, `color`, and `status`.
 
 * Debug any errors that prevent `rspec` from running your tests. Read log and error messages carefully.
 
@@ -88,13 +102,31 @@ Don't forget to use Rails to generate `rspec` tests for your model and controlle
 
 * Making a change while doing TDD for an app? Better write tests first!
 
-* Your goal is to add an instance method to the products model called `sell_through`. The `#sell_through` method should calculate and return the overall sell-through rate for this product (items sold / total items). **Write the spec for `#sell_through`.**
+* Your goal is to add an instance method to the products model called `sell_through`. The `#sell_through` method should calculate and return a decimal value: the overall sell-through rate for this product (items sold / total items). **Write the spec for `#sell_through`.**
 
 * Once you have the spec written, write code in your product model to pass the test(s) you wrote.
 
 
 
-<!-- Feel free to reference the [solution_items branch](../../tree/solution_items) for guidance. -->
+Feel free to reference the [solution_items branch](../../tree/solution-items) for guidance.
+
+## Part 3: Code Cleanup
+
+
+####Goal: Strong params for security and prosperity!
+
+* If you haven't yet, use Rails strong parameters for your items and products controllers.
+* In your products controller, define a private `product_params` method that implements strong parameters (look this up if you need to)!  Refactor your controller actions to use the new `product_params` method.
+
+* In your items controller, define a private `item_params` method that implements strong parameters (look this up if you need to)!  Refactor your controller actions to use the new `item_params` method.
+
+####Goal: DRYify item and product lookup.
+
+* Many routes in the products controller look up a product by id.  Define a private `set_product` method in the products controller that assigns the `@product` variable based on the id parameter.
+
+* Refactor your controller actions to use the `set_product` method before the other methods that find the product. Hint: look up `before_filter`.
+
+* Similarly, many routes in the items controller look up a product and/or item. Create `set_product` and `set_item` methods in your items controller, and use `before_filter`s to apply them to the appropriate actions.
 
 ## Resources
 
