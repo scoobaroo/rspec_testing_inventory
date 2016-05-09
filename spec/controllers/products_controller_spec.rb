@@ -102,11 +102,11 @@ RSpec.describe ProductsController, type: :controller do
       get :edit, id: product.id
     end
 
-    it "should assign @product" do
+    it "assigns @product" do
       expect(assigns(:product)).to eq(product)
     end
 
-    it "should render the :edit view" do
+    it "renders the :edit view" do
       expect(response).to render_template(:edit)
     end
   end

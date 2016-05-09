@@ -4,7 +4,7 @@
 
 ## Getting Started
 
-1. Fork this repo, and clone it into your `develop` folder on your local machine.
+1. Fork this repo, and clone it into your WDI class folder on your local machine.
 2. Run `bundle install` to install gems.
 3. Run `rake db:create db:migrate` to create and migrate the database.
 4. Start your Rails server.
@@ -12,72 +12,86 @@
 
 ## Part 1: Products
 
+A product represents a kind of item sold. Each of this app's products will store a `name`, a `description`, a `category`, an `sku` (which may contain numbers and letters), and `wholesale` and `retail` prices.  Both prices will be `decimal`s, because Ruby's `BigDecimal` is more precise than a `float`!
+
 #### Goal:  Pass products controller tests.
 
 * The failing specs are for a `ProductsController`. For the first part of this lab, implement the functionality for the `ProductsController` to pass the tests. **Some tips:**
   * Read the errors carefully. They will guide you as to what to do next.
   * Once you've gotten past the initial setup errors, and you have failing specs printing out in the Terminal, it may help to only run specific specs by name using `rspec spec -e '#index'`
 * You DON'T need to implement fully-functioning views.
+* To pass some of these tests, you'll have to add validations to your model to check that fields are present.  
 
 #### Goal: Write tests for the product model.
 
-* Once you have all the specs passing for the `ProductsController`, it's time to implement unit tests for a product model. Note that your app doesn't currently have a product model. This is the perfect time to write tests for it!
+* Once you have all the specs passing for the `ProductsController`, it's time to implement unit tests for a product model.
 
-* Generate an rspec model test for the product model by running `rails g rspec:model product`.  Read the log messages to find the files that Rails created for you.  
+* Generate an rspec model test for the product model by running `rails g rspec:model product`.  Read the log messages carefully and find the file(s) Rails expects you to use for testing.  One of these files is `spec/factories/products.rb`. You'll use the factory in this file with the gems Factory Girl and FFaker to create data for testing.
 
-* One of the new files should be a "factory" file that FactoryGirl will use to create fake products. Inside, you'll find this code:
 
-    ```
-    factory :product do
-      name "MyString"
-      sku "MyString"
-      wholesale "9.99"
-      retail "9.99"
-      category "MyString"
-      description "MyString"
-    end
-    ```
+* The other new file generated for your model tests is in `spec/models`.  In this file, write tests for a product model instance method called `margin`.  The `#margin` method should calculate and return the [retail margin](http://retail.about.com/od/glossary/g/margin.htm) of the product instance.
 
-    Replace the static strings with FFaker-generated data.
-      * Hint: Remember that the retail and wholesale prices should be decimals.   
-      * Hint: Use Factory Girl's "lazy attributes" to get different attribute values for each product.
+  * <details><summary>What product to test with?</summary>You can use Factory Girl to create a sample product in the test code. (See the controller code for an example.) Also calculate the product's profit margin (by hand) so you know what you expect the `margin` method to return.</details>
 
-* The other new file generated for your model tests is in `spec/models`.  In this file, write tests for a Product model instance method called `margin`.  The `#margin` method should calculate and return the [retail margin](http://retail.about.com/od/glossary/g/margin.htm) of the product instance.
+* Write a test to ensure that the `#margin` method returns a `BigDecimal` value.
 
-  * <details><summary>What product to test with?</summary>You can use Factory Girl to create a sample product in the test code. Also calculate the product's profit margin (by hand) so you know what you expect the `margin` method to return.</details>
-  * Beware of data types. The app is using `BigDecimal` for prices because it stores precise values.
+* Write a test to endure that the `#margin` method returns a correct value.
 
-* Run `rspec spec/models`, and read the output carefully. Fix any errors that are preventing your tests from running. **Don't worry about passing the tests yet.**
+* Run `rspec spec/models`, and read the output carefully. Fix any errors that are preventing your tests from running.  
 
-* Once you have your model tests running, write code to pass them!
+* Once you have your model tests running, write code to pass them! Remember to use strong parameters.
 
-<!-- Feel free to reference the [solution branch](../../tree/solution) for guidance. -->
+Feel free to reference the [solution branch](../../tree/solution) for guidance.
 
 ## Part 2: Items
 
 Now, you'll practice TDD more independently.  
 
-Your app will sell socks.  A product represents a design of socks the site sells.  But, the site allows customization of the color and size of socks, and it would be good to know the status of each pair of socks in our warehouse (sold/unsold).  For this reason, products should **have many items**. Each item will represent a specific pair of socks. Use TDD to guide your implementation of CRUD for items. That means **write tests first**.
+A product represents a type of product the site sells.  (You can think of products as tshirts, for example, where users can pick color and size.)  The site allows customization of the the color and size of products, and it would be good to know the status of each particular item in the warehouse (sold/unsold).  For this reason, products should **have many items**. Use TDD to guide your implementation of CRUD for items. That means **write tests first**.
 
-Don't forget to use Rails to generate `rspec` tests for your model and controller when you're ready to start speccing them out.
+Items should have a minimum of three attributes: `size`, `color`, and `status`. The status will usually be `"sold"` or `"unsold"`.
 
-* Items routes should be nested under products routes. See the [Rails docs for nested resources](http://guides.rubyonrails.org/routing.html#nested-resources).
+Note: Items routes should be nested under products routes. See the [Rails docs for nested resources](http://guides.rubyonrails.org/routing.html#nested-resources).
+
+
 
 #### Goal: Use test-driven development to implement the items controller.
+
+
+* Use Rails to generate an `rspec` test file for the item controller. Run `rspec spec/controllers`, and debug any issues that prevent your item controller tests from running (you'll still see your product controller tests passing).
 
 * Follow the examples in `spec/controllers/products_controller_spec.rb` as a guide while you write tests for your `ItemsController`.
 
 * Your `ItemsController` doesn't need an `#index` method, since your app will display all of a product's items on the `products#show` page. However, it should have the other six methods for RESTful routes (`#new`, `#create`, `#show`, `#edit`, `#update`, and `#destroy`).
 
-* Debug any errors that prevent `rspec` from running your tests. Read log and error messages carefully.
+* As you go, continue to debug any errors that prevent `rspec` from running your tests. Read log and error messages carefully.
 
-* Run `rspec spec/items`, and implement your item controller code to pass the tests you wrote.
+* Implement item controller code to pass the tests you wrote.
 
 #### Goal: Use test-driven development to implement the item model.
 
-* Generate test and factory files for the item model.  Take advantage of the [`factory_girl_rails`](https://github.com/thoughtbot/factory_girl_rails) and [`ffaker`](https://github.com/ffaker/ffaker) gems to define an `item` factory to use in your model tests.
+* Generate test and factory files for the item model.  
 
-* Items should have a minimum of three attributes: `size`, `color`, and `status`. Write tests to make sure the model validates these three attributes for `presence`.
+* Take advantage of the [`factory_girl_rails`](https://github.com/thoughtbot/factory_girl_rails) and [`ffaker`](https://github.com/ffaker/ffaker) gems to define an `item` factory to use in your model tests.
+
+* One of the new files Rails generates when you create model tests should be a "factory" file that Factory Girl will use to create fake items. Inside, you'll find this code:
+
+  ```ruby
+  FactoryGirl.define do
+    factory :item do
+      size "MyString"
+      color "MyString"
+      status "MyString"
+    end
+  end
+  ```
+
+  Replace the static strings with FFaker-generated data.
+    * Hint: Use Factory Girl's "lazy attributes" to get different attribute values for each product.  
+
+* Use Factory Girl's associations to add a product to your item factory.
+
+*  Write tests to make sure the model validates the `presence` of three attributes: `size`, `color`, and `status`.
 
 * Debug any errors that prevent `rspec` from running your tests. Read log and error messages carefully.
 
@@ -88,13 +102,13 @@ Don't forget to use Rails to generate `rspec` tests for your model and controlle
 
 * Making a change while doing TDD for an app? Better write tests first!
 
-* Your goal is to add an instance method to the products model called `sell_through`. The `#sell_through` method should calculate and return the overall sell-through rate for this product (items sold / total items). **Write the spec for `#sell_through`.**
+* Your goal is to add an instance method to the products model called `sell_through`. The `#sell_through` method should calculate and return a decimal value: the overall sell-through rate for this product (items sold / total items). **Write the spec for `#sell_through`.**
 
 * Once you have the spec written, write code in your product model to pass the test(s) you wrote.
 
 
 
-<!-- Feel free to reference the [solution_items branch](../../tree/solution_items) for guidance. -->
+Feel free to reference the [solution_items branch](../../tree/solution-items) for guidance.
 
 ## Resources
 
