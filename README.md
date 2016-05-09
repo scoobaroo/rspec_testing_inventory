@@ -12,7 +12,7 @@
 
 ## Part 1: Products
 
-A product represents a kind of item sold. Each of this app's products will store a `name`, a `description`, a `category`, an `sku` (which may contain numbers and letters), and `wholesale` and `retail` prices.  Both prices will be `decimal`s, because Ruby's `BigDecimal` is more precise than a `float`!
+A product represents a kind of item sold. Each of this app's products will store a `name`, a `description`, a `category`, a `sku` number (which may contain numbers and letters), and `wholesale` and `retail` prices.  Both prices will be `decimal`s, because Ruby's `BigDecimal` is more precise than a `float`!
 
 #### Goal:  Pass products controller tests.
 
