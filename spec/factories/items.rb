@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :item do
-    color "cerulean"
+    color { FFaker::Color.name }
     size "M"
-    status "unsold"
+    status { ["sold", "unsold"].sample }
   end
 end
