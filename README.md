@@ -12,9 +12,9 @@
 5. Run `rspec` in the Terminal. You should see `0 examples, 0 failures`.
 6. Create a new `my-items-intro` branch to start working on, and switch to it.
 
-## Part 0: Items TDD
+## Intro: Items TDD
 
-**Set up items controller test files.**
+#### Goal: Set up items controller test files.
 
 * Use Rails to generate an rspec controller test file for the items controller: `rails g rspec:controller items`. Read the Terminal output, and open the new file that was created.
 
@@ -25,7 +25,7 @@
 * Run `rspec` to confirm your tests are no longer throwing errors.
 
 
-**Set up item model test files.**
+#### Goal: Set up item model test files.
 
 * Use Rails to generate rspec model test files for the items model: `rails g rspec:model item`. Note that this command creates two new files. One is a factory, and the other is the `Item` model spec.
 
@@ -36,7 +36,7 @@
 * Run `rspec` to confirm the tests are working. You will see "pending" tests.
 
 
-**Test the `items#show` controller action action.**
+#### Goal: Test the `items#show` controller action.
 
 * Add a RESTful route to `config/routes.rb` that will trigger the items controller's `show` action.  To follow Rails conventions, make it a named route with the name or "prefix" `item`. Run `rake routes`.
 
@@ -137,7 +137,7 @@
 
 * Run `rspec spec/controllers`, and write code to pass your tests.
 
-**Test the `items#create` controller action.**
+#### Goal: Test the `items#create` controller action.
 
 * Make the route in `config/routes.rb` that will route to the `items#create` action. Also make a route for the `items#new` action, since that's the action that will eventually serve a form and lead to the `create` route.
 
@@ -255,10 +255,12 @@
   end
   ```
 
+#### Goal: Pass the controller tests!
+
 * Run `rspec spec/controllers`, and fill in the `show` and `create` actions pass your tests. (You'll need to add a validation to the item model to ensure the `status` is present.)
 
 
-**More realistic test data.**
+#### Goal: More realistic test data.
 
 * Take a closer look at the item factory file that Rails generated for you when you generated the model test: `spec/factories/items.rb`. Factory Girl is a gem that will set up and tear down instances of test data for your app. The current code sets up a factory to create and destroy `item` instances. It should look like this:
 
@@ -345,7 +347,7 @@ Reference the [solution-products branch](../../tree/solution-products) for guida
 * Once you have your model tests running, write code to pass them!
 
 
-## Part 2: Items
+## Part 2: Nested Items
 
 Now, you'll practice TDD more independently.  
 
