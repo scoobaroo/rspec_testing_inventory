@@ -9,6 +9,10 @@ RSpec.describe ItemsController, type: :controller do
       get :show, product_id: item.product.id, id: item.id
     end
 
+    it "assigns @product" do
+      expect(assigns(:product)).to eq(item.product)
+    end
+
     it "assigns @item" do
       expect(assigns(:item)).to eq(item)
     end
@@ -18,11 +22,15 @@ RSpec.describe ItemsController, type: :controller do
     end
   end
 
-
   describe "#new" do
     let(:product) { FactoryGirl.create(:product) }
+
     before do
       get :new, product_id: product.id
+    end
+
+    it "assigns @product" do
+      expect(assigns(:product)).to eq(product)
     end
 
     it "assigns @item" do
@@ -36,9 +44,10 @@ RSpec.describe ItemsController, type: :controller do
 
 
   describe "#create" do
-    context "on success" do
-      let(:product) { FactoryGirl.create(:product) }
-      let!(:items_count) { Item.count }
+    let(:product) { FactoryGirl.create(:product) }
+
+    context "success" do
+      let!(:items_count) { product.items.count }
 
       before do
         item_hash = {
@@ -54,39 +63,43 @@ RSpec.describe ItemsController, type: :controller do
         expect(response.location).to match(/\/products\/#{product.id}\/items\/\d+/)
       end
 
-      it "adds the new product to the database" do
-        expect(Item.count).to eq(items_count + 1)
+      it "adds the new item to the product" do
+        expect(product.items.count).to eq(items_count + 1)
       end
+
     end
 
     context "failed validations" do
-      let(:product) { FactoryGirl.create(:product) }
       before do
-        # create blank product (fails validations)
-        post :create, product_id: product.id, item: {
+        # create item without status (fails validations)
+        item_hash = {
           size: nil,
           color: nil,
           status: nil
         }
+        post :create, product_id: product.id, item: item_hash
+      end
+
+      it "redirects to 'new_product_item_path'" do
+        expect(response.status).to be(302)
+        expect(response).to redirect_to(new_product_item_path(product))
       end
 
       it "adds a flash error message" do
         expect(flash[:error]).to be_present
       end
-      #
-      it "redirects to 'new_product_item_path'" do
-        expect(response.status).to be(302)
-        expect(response).to redirect_to(new_product_item_path product)
-      end
     end
   end
-
 
   describe "#edit" do
     let(:item) { FactoryGirl.create :item }
 
     before do
       get :edit, product_id: item.product.id, id: item.id
+    end
+
+    it "assigns @product" do
+      expect(assigns(:product)).to eq(item.product)
     end
 
     it "assigns @item" do
@@ -102,36 +115,35 @@ RSpec.describe ItemsController, type: :controller do
     let(:item) { FactoryGirl.create(:item) }
 
     context "success" do
-      let(:new_color) { FFaker::Color.name }
-      let(:new_size) { ['S', 'M', 'L', 'venti'].sample }
-      let(:new_status) { ['sold', 'unsold'].sample }
+      let(:new_item_hash) do
+        {
+          size: 'M',
+          color: 'burgundy',
+          status: 'sold'
+        }
+      end
 
       before do
-        put :update, product_id: item.product.id, id: item.id, item: {
-          color: new_color,
-          size: new_size,
-          status: new_status
-        }
-
+        put :update, product_id: item.product.id, id: item.id, item: new_item_hash
         # reload product to get changes from :update
         item.reload
       end
 
       it "updates the item in the database" do
-        expect(item.size).to eq(new_size)
-        expect(item.color).to eq(new_color)
-        expect(item.status).to eq(new_status)
+        expect(item.size).to eq(new_item_hash[:size])
+        expect(item.color).to eq(new_item_hash[:color])
+        expect(item.status).to eq(new_item_hash[:status])
       end
 
       it "redirects to 'product_item_path'" do
         expect(response.status).to be(302)
-        expect(response).to redirect_to(product_item_path(item.product_id, item.id))
+        expect(response).to redirect_to(product_item_path(item.product, item))
       end
     end
 
     context "failed validations" do
       before do
-        # update with blank product params (fails validations)
+        # update with blank item status param (fails validations)
         put :update, product_id: item.product.id, id: item.id, item: {
           size: nil,
           color: nil,
@@ -144,26 +156,26 @@ RSpec.describe ItemsController, type: :controller do
       end
 
       it "redirects to 'edit_product_item_path'" do
-        expect(response).to redirect_to(edit_product_item_path(item.product.id, item.id))
+        expect(response).to redirect_to(edit_product_item_path(item.product, item))
       end
     end
   end
 
   describe "#destroy" do
     let!(:item) { FactoryGirl.create(:item) }
-    let!(:items_count) { Item.count }
+    let!(:items_count) { item.product.items.count }
 
     before do
       delete :destroy, product_id: item.product.id, id: item.id
     end
 
     it "removes an item from the database" do
-      expect(Item.count).to eq(items_count - 1)
+      expect(item.product.items.count).to eq(items_count - 1)
     end
-    
-    it "redirects to 'root_path'" do
+
+    it "redirects to 'product_path'" do
       expect(response.status).to be(302)
-      expect(response).to redirect_to(root_path)
+      expect(response).to redirect_to(product_path(item.product))
     end
   end
 end

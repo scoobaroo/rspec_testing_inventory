@@ -22,17 +22,15 @@ class ProductsController < ApplicationController
 
   def show
     # @product is looked up with the before_filter
-    # @product = Product.find_by(id: params[:id])
   end
 
   def edit
     # @product is looked up with the before_filter
-    # @product = Product.find_by(id: params[:id])
   end
 
+
   def update
-    # @product is looked up with the before_filter
-    if @product.update_attributes(product_params)
+    if @product.update(product_params)
       flash[:notice] = "Successfully updated product."
       redirect_to product_path(@product)
     else
