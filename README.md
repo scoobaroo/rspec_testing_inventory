@@ -152,7 +152,7 @@
 
 * Create skeleton (empty) methods in the items controller for the `new` and `create` actions.
 
-* Make a new block in the items controller test file (`spec/controllers/items_controller_spec.rb`) to `describe` the `#create` action.  
+* Make a new block in the items controller spec file (`spec/controllers/items_controller_spec.rb`) to `describe` the `#create` action.  
 
 * For this action, you'll test two different contexts: successful creates and validation failures. Add two `context` blocks inside the `describe #create` block.
 
@@ -288,7 +288,7 @@
   end
   ```
 
-* It can be a benefit to test with data that is more realistic, and randomized test data can help ensure you're not accidentally coding a solution that's too narrow.
+* It can be a benefit to test with data that is more realistic.  Sometimes people use randomized data as well, but you have to be extremely careful as this can introduce hard to track-down intermittent test failures.
 
 * Use Factory Girl's "[lazy attributes](https://github.com/thoughtbot/factory_girl/blob/master/GETTING_STARTED.md#lazy-attributes)" and the Ruby array method [`sample`](http://ruby-doc.org/core-2.2.0/Array.html#method-i-sample) to make the factory randomly assign either `"sold"` or `"unsold"` as the status of each item it creates.
 
