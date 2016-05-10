@@ -1,3 +1,9 @@
-index product view (all products)
-
-<%= @products %>
+<h1>Inventory</h1>
+<hr>
+<% @products.each do |product| %>
+  <p>
+    <strong><%= product.name %></strong> (<%= product.sku %>)
+    - <%= link_to "View Product", product_path(product) %>
+  </p>
+  <hr>
+<% end %>
