@@ -8,6 +8,6 @@ FactoryGirl.define do
     sku { FFaker::Lorem.words(2).join }
     wholesale { wholesale_price }
     retail { wholesale_price * 4 }
-  end
+  end 
 
 end
