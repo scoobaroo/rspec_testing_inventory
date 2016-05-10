@@ -96,7 +96,7 @@
   end
   ```
 
-* This isn't looking very DRY!  Use the `rspec-rails` [`let!`](https://www.relishapp.com/rspec/rspec-core/v/2-5/docs/helper-methods/let-and-let) helper method to assign the `item` at the beginning of the `describe #show` block:
+* This isn't looking very DRY!  Use the `rspec-rails` [`let`](https://www.relishapp.com/rspec/rspec-core/v/2-5/docs/helper-methods/let-and-let) helper method to assign the `item` at the beginning of the `describe #show` block:
 
   ```ruby
   describe "#show" do
